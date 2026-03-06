@@ -181,9 +181,14 @@ export default function AdminBarbers() {
               style={input}
               value={create.timezone}
               onChange={(e) => setCreateField("timezone", e.target.value)}
+              className="bg-black"
             >
-              <option value="Asia/Jerusalem">Asia/Jerusalem</option>
-              <option value="UTC">UTC</option>
+              <option value="Asia/Jerusalem" className="bg-black">
+                Asia/Jerusalem
+              </option>
+              {/* <option value="UTC" className="bg-black">
+                UTC
+              </option> */}
             </select>
           </label>
 
@@ -196,11 +201,21 @@ export default function AdminBarbers() {
                 setCreateField("slotMinutes", Number(e.target.value))
               }
             >
-              <option value="15">15</option>
-              <option value="20">20</option>
-              <option value="30">30</option>
-              <option value="45">45</option>
-              <option value="60">60</option>
+              <option value="15" className="bg-black">
+                15
+              </option>
+              <option value="20" className="bg-black">
+                20
+              </option>
+              <option value="30" className="bg-black">
+                30
+              </option>
+              <option value="45" className="bg-black">
+                45
+              </option>
+              <option value="60" className="bg-black">
+                60
+              </option>
             </select>
           </label>
 
@@ -358,8 +373,10 @@ export default function AdminBarbers() {
                             setEdit((s) => ({ ...s, timezone: e.target.value }))
                           }
                         >
-                          <option value="Asia/Jerusalem">Asia/Jerusalem</option>
-                          <option value="UTC">UTC</option>
+                          <option value="Asia/Jerusalem" className="bg-black">
+                            Asia/Jerusalem
+                          </option>
+                          {/* <option value="UTC">UTC</option> */}
                         </select>
                       </label>
 
@@ -375,11 +392,21 @@ export default function AdminBarbers() {
                             }))
                           }
                         >
-                          <option value="15">15</option>
-                          <option value="20">20</option>
-                          <option value="30">30</option>
-                          <option value="45">45</option>
-                          <option value="60">60</option>
+                          <option value="15" className="bg-black">
+                            15
+                          </option>
+                          <option value="20" className="bg-black">
+                            20
+                          </option>
+                          <option value="30" className="bg-black">
+                            30
+                          </option>
+                          <option value="45" className="bg-black">
+                            45
+                          </option>
+                          <option value="60" className="bg-black">
+                            60
+                          </option>
                         </select>
                       </label>
 

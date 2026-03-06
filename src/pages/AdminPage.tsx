@@ -79,9 +79,11 @@ export default function AdminPage() {
                   onChange={(e) => setSelectedBarberId(e.target.value)}
                   style={pickerSelect}
                 >
-                  <option value="">-- Choose --</option>
+                  <option value="" className="bg-black">
+                    -- Choose --
+                  </option>
                   {barbers.map((b) => (
-                    <option key={b._id} value={b._id}>
+                    <option key={b._id} value={b._id} className="bg-black">
                       {b.name}
                     </option>
                   ))}
@@ -147,5 +149,6 @@ const pickerSelect = {
   borderRadius: 10,
   border: "1px solid #111",
   minWidth: 220,
-  color: "black",
+  color: "white",
+  backgroundColor: "black",
 };

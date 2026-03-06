@@ -545,9 +545,11 @@ export default function AdminAppointments() {
               value={barberId}
               onChange={(e) => setBarberId(e.target.value)}
             >
-              <option value="">All barbers</option>
+              <option value="" className="bg-black">
+                All barbers
+              </option>
               {barbers.map((b) => (
-                <option key={b._id} value={b._id}>
+                <option key={b._id} value={b._id} className="bg-black">
                   {b.name}
                 </option>
               ))}
@@ -600,9 +602,11 @@ export default function AdminAppointments() {
                 }));
               }}
             >
-              <option value="">Select barber…</option>
+              <option value="" className="bg-black">
+                Select barber…
+              </option>
               {barbers.map((b) => (
-                <option key={b._id} value={b._id}>
+                <option key={b._id} value={b._id} className="bg-black">
                   {b.name}
                 </option>
               ))}
@@ -647,14 +651,14 @@ export default function AdminAppointments() {
               }}
             >
               {createSlots.length === 0 ? (
-                <option value="">
+                <option value="" className="bg-black">
                   {create.barberId && create.date
                     ? "No available slots"
                     : "Pick barber + date"}
                 </option>
               ) : (
                 createSlots.map((t) => (
-                  <option key={t} value={t}>
+                  <option key={t} value={t} className="bg-black">
                     {t}
                   </option>
                 ))
@@ -677,7 +681,7 @@ export default function AdminAppointments() {
               }
             >
               {SERVICE_OPTIONS.map((s) => (
-                <option key={s.value} value={s.value}>
+                <option key={s.value} value={s.value} className="bg-black">
                   {s.label}
                 </option>
               ))}
@@ -835,9 +839,15 @@ export default function AdminAppointments() {
                               }))
                             }
                           >
-                            <option value="">Select barber…</option>
+                            <option value="" className="bg-black">
+                              Select barber…
+                            </option>
                             {barbers.map((b) => (
-                              <option key={b._id} value={b._id}>
+                              <option
+                                key={b._id}
+                                value={b._id}
+                                className="bg-black"
+                              >
                                 {b.name}
                               </option>
                             ))}
@@ -879,14 +889,14 @@ export default function AdminAppointments() {
                             }}
                           >
                             {editSlots.length === 0 ? (
-                              <option value="">
+                              <option value="" className="bg-black">
                                 {!edit.barberId || !edit.date
                                   ? "Pick barber + date"
                                   : "No available slots"}
                               </option>
                             ) : (
                               editSlots.map((t) => (
-                                <option key={t} value={t}>
+                                <option key={t} value={t} className="bg-black">
                                   {t}
                                 </option>
                               ))
@@ -917,7 +927,11 @@ export default function AdminAppointments() {
                             }
                           >
                             {SERVICE_OPTIONS.map((s) => (
-                              <option key={s.value} value={s.value}>
+                              <option
+                                key={s.value}
+                                value={s.value}
+                                className="bg-black"
+                              >
                                 {s.label}
                               </option>
                             ))}
@@ -948,7 +962,7 @@ export default function AdminAppointments() {
                             }
                           >
                             {STATUS.map((s) => (
-                              <option key={s} value={s}>
+                              <option key={s} value={s} className="bg-black">
                                 {s}
                               </option>
                             ))}

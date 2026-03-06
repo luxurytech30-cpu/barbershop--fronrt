@@ -91,7 +91,7 @@ export default function Header() {
 
   const navLinks = [
     { label: t("nav.about"), href: "/about" },
-    // { label: t("nav.services"), href: "/#services" },
+    { label: t("nav.booked"), href: "/my-appointment" },
     { label: t("nav.shop"), href: "/store" },
     { label: t("nav.academy"), href: "/academy" },
     { label: t("nav.book"), href: "/book" },
@@ -102,7 +102,7 @@ export default function Header() {
     <>
       <header
         className={[
-          "fixed left-0 right-0 top-[38px] z-[99999] isolate",
+          "fixed left-0 right-0 top-[35px] z-[99] isolate",
           "transition-all duration-300",
           scrolled
             ? "bg-black/80 backdrop-blur-md shadow-2xl"
@@ -250,6 +250,13 @@ export default function Header() {
                 </Link>
               )}
 
+              <Link
+                to="/book"
+                onClick={() => setIsOpen(false)}
+                className="text-white text-2xl tracking-[0.2em] font-heading hover:opacity-70 transition-opacity"
+              >
+                {t("nav.book")}
+              </Link>
               {/* Auth inside menu */}
               {isLogged ? (
                 <button
@@ -279,14 +286,6 @@ export default function Header() {
                   </span>
                 </button>
               )}
-
-              <Link
-                to="/book"
-                onClick={() => setIsOpen(false)}
-                className="text-white text-2xl tracking-[0.2em] font-heading hover:opacity-70 transition-opacity"
-              >
-                {t("nav.book")}
-              </Link>
 
               <button
                 onClick={() => setIsOpen(false)}

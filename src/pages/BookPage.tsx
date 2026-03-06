@@ -43,7 +43,26 @@ function nowMinutes() {
   const d = new Date();
   return d.getHours() * 60 + d.getMinutes();
 }
+function saveLatestAppointmentToStorage(data: {
+  appointmentId: string;
+  bookingCode: string;
+  manageToken: string;
+}) {
+  localStorage.setItem("latestAppointment", JSON.stringify(data));
+}
 
+function getLatestAppointmentFromStorage() {
+  try {
+    const raw = localStorage.getItem("latestAppointment");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearLatestAppointmentFromStorage() {
+  localStorage.removeItem("latestAppointment");
+}
 function addMinutesToDate(dateYmd: string, timeHHmm: string, addMin: number) {
   const start = new Date(`${dateYmd}T${timeHHmm}:00`);
   const end = new Date(start.getTime() + addMin * 60000);
@@ -98,6 +117,12 @@ export default function BookPage() {
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const [bookingResult, setBookingResult] = useState<null | {
+    appointmentId: string;
+    bookingCode: string;
+    manageToken: string;
+  }>(null);
+
   const selectedService = useMemo(
     () => services.find((s) => s._id === selectedServiceId),
     [services, selectedServiceId],
@@ -113,7 +138,12 @@ export default function BookPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step]);
-
+  useEffect(() => {
+    const saved = getLatestAppointmentFromStorage();
+    if (saved?.manageToken) {
+      setBookingResult(saved);
+    }
+  }, []);
   useEffect(() => {
     (async () => {
       try {
@@ -256,7 +286,7 @@ export default function BookPage() {
     try {
       setSubmitting(true);
 
-      await api.post("/api/appointments", {
+      const res = await api.post("/api/appointments", {
         barberId: selectedBarberId,
         startAt: start.toISOString(),
         endAt: end.toISOString(),
@@ -266,10 +296,17 @@ export default function BookPage() {
         notes: "",
       });
 
+      const result = {
+        appointmentId: res?.data?.appointmentId || "",
+        bookingCode: res?.data?.bookingCode || "",
+        manageToken: res?.data?.manageToken || "",
+      };
+
+      setBookingResult(result);
+      saveLatestAppointmentToStorage(result);
+
       toast({
         title: lang === "he" ? "התור נקבע בהצלחה" : "Appointment booked",
-        description:
-          lang === "he" ? "ההזמנה נשמרה" : "Your appointment was saved",
       });
 
       setStep(1);
@@ -310,6 +347,54 @@ export default function BookPage() {
           <p className="mb-10 text-center text-sm text-muted-foreground">
             {t("book.subtitle")}
           </p>
+
+          {bookingResult?.manageToken ? (
+            <div className="mb-8 border border-border p-5 text-sm">
+              <div className="mb-2 font-semibold text-foreground">
+                {lang === "he"
+                  ? "התור נקבע בהצלחה"
+                  : "Appointment booked successfully"}
+              </div>
+
+              <div className="mb-2 text-muted-foreground">
+                {lang === "he"
+                  ? "שמרנו את פרטי התור בדפדפן הזה. אפשר לצפות, לערוך או לבטל עד שעתיים לפני המועד."
+                  : "We saved your appointment on this browser. You can view, edit, or cancel it up to 2 hours before the appointment."}
+              </div>
+
+              <div className="mb-4">
+                <span className="text-muted-foreground">
+                  {lang === "he" ? "קוד הזמנה: " : "Booking code: "}
+                </span>
+                <span className="font-medium text-foreground">
+                  {bookingResult.bookingCode || "-"}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.href = "/my-appointment";
+                  }}
+                  className="border border-foreground bg-foreground px-4 py-2 text-xs text-primary-foreground transition-opacity hover:opacity-90"
+                >
+                  {lang === "he" ? "צפה בתור שלי" : "View My Appointment"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearLatestAppointmentFromStorage();
+                    setBookingResult(null);
+                  }}
+                  className="border border-border px-4 py-2 text-xs text-foreground transition-colors hover:border-foreground/50"
+                >
+                  {lang === "he" ? "נקה שמירה" : "Clear saved appointment"}
+                </button>
+              </div>
+            </div>
+          ) : null}
 
           <div className="mb-8 border border-border p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -368,6 +453,7 @@ export default function BookPage() {
                         type="button"
                         onClick={() => {
                           console.log("SERVICE CLICKED:", s);
+                          setBookingResult(null);
                           setSelectedServiceId(s._id);
                           setStep(2);
                         }}

@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import AdminPage from "./pages/AdminPage";
 import AdminBarberSchedulePage from "./pages/AdminBarberSchedulePage";
 import ScrollToTop from "@/components/ScrollToTop";
+import MyAppointmentPage from "./pages/MyAppointment";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/store" element={<StorePage />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/my-appointment" element={<MyAppointmentPage />} />
               <Route
                 path="/admin/barbers/:id/schedule"
                 element={<AdminBarberSchedulePage />}

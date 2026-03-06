@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 
 type Lang = "he" | "en";
 
@@ -21,6 +27,7 @@ const translations: Translations = {
   "nav.academy": { he: "אקדמיה", en: "ACADEMY" },
   "nav.contact": { he: "צור קשר", en: "CONTACT" },
   "nav.book": { he: "הזמן תור", en: "BOOK NOW" },
+  "nav.booked": { he: "התור שלי", en: "MY APPOINTMENT" },
 
   // Hero
   "hero.title": {
@@ -43,6 +50,7 @@ const translations: Translations = {
   "book.dateTime": { he: "תאריך ושעה", en: "Date & Time" },
   "common.back": { he: "חזרה", en: "Back" },
   "common.loading": { he: "טוען...", en: "Loading..." },
+
   // Categories
   "cat.book": { he: "הזמן תור", en: "BOOK AN APPOINTMENT FOR HAIRCUT" },
   "cat.book.cta": { he: "הזמן תור לתספורת", en: "Book A Haircut" },
@@ -271,6 +279,7 @@ const translations: Translations = {
   "store.results": { he: "תוצאות", en: "Results" },
   "store.noResults": { he: "לא נמצאו מוצרים.", en: "No products found." },
   "common.clear": { he: "נקה", en: "Clear" },
+
   // Product page
   "product.addToCart": { he: "הוסף לסל", en: "ADD TO CART" },
   "product.description": { he: "תיאור", en: "DESCRIPTION" },
@@ -289,9 +298,6 @@ const translations: Translations = {
   // Product info
   "product.category": { he: "קטגוריה", en: "Category" },
 
-  // Common
-  "common.loading": { he: "טוען...", en: "Loading..." },
-
   // Language
   "lang.switch": { he: "EN", en: "עב" },
 };
@@ -308,7 +314,16 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 );
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [lang, setLang] = useState<Lang>("he");
+  const [lang, setLang] = useState<Lang>(() => {
+    const saved = localStorage.getItem("app-lang");
+    return saved === "en" || saved === "he" ? saved : "he";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("app-lang", lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "he" ? "rtl" : "ltr";
+  }, [lang]);
 
   const t = (key: string): string => {
     return translations[key]?.[lang] || key;

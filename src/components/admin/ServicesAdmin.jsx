@@ -146,12 +146,12 @@ export default function ServicesAdmin() {
             <h1 className="text-2xl md:text-3xl font-heading tracking-[0.1em] text-foreground">
               Services Admin
             </h1>
-            <button
+            {/* <button
               onClick={startCreate}
               className="border border-foreground px-4 py-2 text-xs font-heading tracking-[0.15em] hover:bg-foreground hover:text-primary-foreground transition-all"
             >
               + New Service
-            </button>
+            </button> */}
           </div>
 
           {/* Table */}
