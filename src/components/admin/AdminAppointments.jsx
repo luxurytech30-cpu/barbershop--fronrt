@@ -738,249 +738,259 @@ export default function AdminAppointments() {
       </div>
 
       {/* List */}
-      <div style={{ marginTop: 16, display: "grid", gap: 12 }}>
-        {loading ? (
-          <div style={empty}>Loading…</div>
-        ) : items.length === 0 ? (
-          <div style={empty}>No appointments for this filter.</div>
-        ) : (
-          items.map((a) => {
-            const isEditing = editingId === a._id;
-            const rowBarberId = a.barberId?._id || a.barberId;
+      <div style={listWrap}>
+        <div style={listScroll}>
+          {loading ? (
+            <div style={empty}>Loading…</div>
+          ) : items.length === 0 ? (
+            <div style={empty}>No appointments for this filter.</div>
+          ) : (
+            items.map((a) => {
+              const isEditing = editingId === a._id;
+              const rowBarberId = a.barberId?._id || a.barberId;
 
-            return (
-              <div key={a._id} style={productCard}>
-                <div style={productTop}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={productNameRow}>
-                      <div style={productName}>
-                        {fmtTime(a.startAt)}–{fmtTime(a.endAt)} •{" "}
-                        {a.customerName}
+              return (
+                <div key={a._id} style={productCard}>
+                  <div style={productTop}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={productNameRow}>
+                        <div style={productName}>
+                          {fmtTime(a.startAt)}–{fmtTime(a.endAt)} •{" "}
+                          {a.customerName}
+                        </div>
+
+                        <div
+                          style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
+                        >
+                          <span style={badgeSoft}>
+                            {barberName(rowBarberId)}
+                          </span>
+                          <span style={badgeSoft}>{a.status}</span>
+                          {a.phone ? (
+                            <span style={badgeSoft}>{a.phone}</span>
+                          ) : null}
+                          {a.service ? (
+                            <span style={badgeSoft}>{a.service}</span>
+                          ) : null}
+                        </div>
                       </div>
 
-                      <div
-                        style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
-                      >
-                        <span style={badgeSoft}>{barberName(rowBarberId)}</span>
-                        <span style={badgeSoft}>{a.status}</span>
-                        {a.phone ? (
-                          <span style={badgeSoft}>{a.phone}</span>
-                        ) : null}
-                        {a.service ? (
-                          <span style={badgeSoft}>{a.service}</span>
-                        ) : null}
-                      </div>
+                      {a.notes ? <div style={noteText}>{a.notes}</div> : null}
                     </div>
 
-                    {a.notes ? <div style={noteText}>{a.notes}</div> : null}
+                    <div style={actions}>
+                      {a.status !== "cancelled" ? (
+                        <button
+                          style={{ ...btn, ...btnDanger }}
+                          onClick={() => onCancel(a._id)}
+                          type="button"
+                        >
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          style={{ ...btn, ...btnDanger, opacity: 0.6 }}
+                          disabled
+                          type="button"
+                        >
+                          Cancelled
+                        </button>
+                      )}
+
+                      {!isEditing ? (
+                        <button
+                          style={{ ...btn, ...btnPrimary }}
+                          onClick={() => startEditRow(a)}
+                          type="button"
+                        >
+                          Edit
+                        </button>
+                      ) : (
+                        <button style={btn} onClick={cancelEdit} type="button">
+                          Close
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  <div style={actions}>
-                    {a.status !== "cancelled" ? (
-                      <button
-                        style={{ ...btn, ...btnDanger }}
-                        onClick={() => onCancel(a._id)}
-                        type="button"
-                      >
-                        Cancel
-                      </button>
-                    ) : (
-                      <button
-                        style={{ ...btn, ...btnDanger, opacity: 0.6 }}
-                        disabled
-                        type="button"
-                      >
-                        Cancelled
-                      </button>
-                    )}
+                  {/* Edit panel */}
+                  {isEditing && (
+                    <div style={editPanel}>
+                      {editMsg ? (
+                        <div style={{ ...noteBox, marginTop: 0 }}>
+                          ℹ {editMsg}
+                        </div>
+                      ) : null}
 
-                    {!isEditing ? (
-                      <button
-                        style={{ ...btn, ...btnPrimary }}
-                        onClick={() => startEditRow(a)}
-                        type="button"
-                      >
-                        Edit
-                      </button>
-                    ) : (
-                      <button style={btn} onClick={cancelEdit} type="button">
-                        Close
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Edit panel */}
-                {isEditing && (
-                  <div style={editPanel}>
-                    {editMsg ? (
-                      <div style={{ ...noteBox, marginTop: 0 }}>
-                        ℹ {editMsg}
-                      </div>
-                    ) : null}
-
-                    <div style={editGrid}>
-                      <label style={field}>
-                        <span style={label}>Barber</span>
-                        <select
-                          style={input}
-                          value={edit.barberId}
-                          onChange={(e) =>
-                            setEdit((s) => ({ ...s, barberId: e.target.value }))
-                          }
-                        >
-                          <option value="">Select barber…</option>
-                          {barbers.map((b) => (
-                            <option key={b._id} value={b._id}>
-                              {b.name}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label style={field}>
-                        <span style={label}>Date</span>
-                        <input
-                          style={input}
-                          type="date"
-                          min={todayYYYYMMDD()}
-                          value={edit.date}
-                          onChange={(e) =>
-                            setEdit((s) => ({ ...s, date: e.target.value }))
-                          }
-                        />
-                      </label>
-
-                      <label style={field}>
-                        <span style={label}>Start Time</span>
-                        <select
-                          style={input}
-                          value={edit.startTime}
-                          disabled={
-                            !edit.barberId ||
-                            !edit.date ||
-                            editSlots.length === 0
-                          }
-                          onChange={(e) => {
-                            const startTime = e.target.value;
-                            setEdit((s) => ({
-                              ...s,
-                              startTime,
-                              endTime: startTime
-                                ? addMin(startTime, editSlotMinutes)
-                                : "",
-                            }));
-                          }}
-                        >
-                          {editSlots.length === 0 ? (
-                            <option value="">
-                              {!edit.barberId || !edit.date
-                                ? "Pick barber + date"
-                                : "No available slots"}
-                            </option>
-                          ) : (
-                            editSlots.map((t) => (
-                              <option key={t} value={t}>
-                                {t}
+                      <div style={editGrid}>
+                        <label style={field}>
+                          <span style={label}>Barber</span>
+                          <select
+                            style={input}
+                            value={edit.barberId}
+                            onChange={(e) =>
+                              setEdit((s) => ({
+                                ...s,
+                                barberId: e.target.value,
+                              }))
+                            }
+                          >
+                            <option value="">Select barber…</option>
+                            {barbers.map((b) => (
+                              <option key={b._id} value={b._id}>
+                                {b.name}
                               </option>
-                            ))
-                          )}
-                        </select>
-                      </label>
+                            ))}
+                          </select>
+                        </label>
 
-                      <label style={field}>
-                        <span style={label}>End Time</span>
-                        <input
-                          style={input}
-                          type="time"
-                          value={edit.endTime}
-                          readOnly
+                        <label style={field}>
+                          <span style={label}>Date</span>
+                          <input
+                            style={input}
+                            type="date"
+                            min={todayYYYYMMDD()}
+                            value={edit.date}
+                            onChange={(e) =>
+                              setEdit((s) => ({ ...s, date: e.target.value }))
+                            }
+                          />
+                        </label>
+
+                        <label style={field}>
+                          <span style={label}>Start Time</span>
+                          <select
+                            style={input}
+                            value={edit.startTime}
+                            disabled={
+                              !edit.barberId ||
+                              !edit.date ||
+                              editSlots.length === 0
+                            }
+                            onChange={(e) => {
+                              const startTime = e.target.value;
+                              setEdit((s) => ({
+                                ...s,
+                                startTime,
+                                endTime: startTime
+                                  ? addMin(startTime, editSlotMinutes)
+                                  : "",
+                              }));
+                            }}
+                          >
+                            {editSlots.length === 0 ? (
+                              <option value="">
+                                {!edit.barberId || !edit.date
+                                  ? "Pick barber + date"
+                                  : "No available slots"}
+                              </option>
+                            ) : (
+                              editSlots.map((t) => (
+                                <option key={t} value={t}>
+                                  {t}
+                                </option>
+                              ))
+                            )}
+                          </select>
+                        </label>
+
+                        <label style={field}>
+                          <span style={label}>End Time</span>
+                          <input
+                            style={input}
+                            type="time"
+                            value={edit.endTime}
+                            readOnly
+                          />
+                        </label>
+
+                        <label style={field}>
+                          <span style={label}>Service</span>
+                          <select
+                            style={input}
+                            value={edit.service}
+                            onChange={(e) =>
+                              setEdit((s) => ({
+                                ...s,
+                                service: e.target.value,
+                              }))
+                            }
+                          >
+                            {SERVICE_OPTIONS.map((s) => (
+                              <option key={s.value} value={s.value}>
+                                {s.label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+
+                        <EditField
+                          label="Customer Name"
+                          value={edit.customerName}
+                          onChange={(v) =>
+                            setEdit((s) => ({ ...s, customerName: v }))
+                          }
                         />
-                      </label>
 
-                      <label style={field}>
-                        <span style={label}>Service</span>
-                        <select
-                          style={input}
-                          value={edit.service}
-                          onChange={(e) =>
-                            setEdit((s) => ({ ...s, service: e.target.value }))
-                          }
-                        >
-                          {SERVICE_OPTIONS.map((s) => (
-                            <option key={s.value} value={s.value}>
-                              {s.label}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <EditField
-                        label="Customer Name"
-                        value={edit.customerName}
-                        onChange={(v) =>
-                          setEdit((s) => ({ ...s, customerName: v }))
-                        }
-                      />
-
-                      <EditField
-                        label="Phone"
-                        value={edit.phone}
-                        onChange={(v) => setEdit((s) => ({ ...s, phone: v }))}
-                      />
-
-                      <label style={field}>
-                        <span style={label}>Status</span>
-                        <select
-                          style={input}
-                          value={edit.status}
-                          onChange={(e) =>
-                            setEdit((s) => ({ ...s, status: e.target.value }))
-                          }
-                        >
-                          {STATUS.map((s) => (
-                            <option key={s} value={s}>
-                              {s}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-
-                      <label style={{ ...field, gridColumn: "1 / -1" }}>
-                        <span style={label}>Notes</span>
-                        <input
-                          style={input}
-                          value={edit.notes}
-                          onChange={(e) =>
-                            setEdit((s) => ({ ...s, notes: e.target.value }))
-                          }
+                        <EditField
+                          label="Phone"
+                          value={edit.phone}
+                          onChange={(v) => setEdit((s) => ({ ...s, phone: v }))}
                         />
-                      </label>
-                    </div>
 
-                    <div style={editActions}>
-                      <button
-                        style={{
-                          ...btn,
-                          ...btnPrimary,
-                          opacity: editSlots.length ? 1 : 0.55,
-                        }}
-                        onClick={() => saveEdit(a._id)}
-                        type="button"
-                        disabled={!editSlots.length}
-                      >
-                        Save changes
-                      </button>
-                      <button style={btn} onClick={cancelEdit} type="button">
-                        Cancel
-                      </button>
+                        <label style={field}>
+                          <span style={label}>Status</span>
+                          <select
+                            style={input}
+                            value={edit.status}
+                            onChange={(e) =>
+                              setEdit((s) => ({ ...s, status: e.target.value }))
+                            }
+                          >
+                            {STATUS.map((s) => (
+                              <option key={s} value={s}>
+                                {s}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+
+                        <label style={{ ...field, gridColumn: "1 / -1" }}>
+                          <span style={label}>Notes</span>
+                          <input
+                            style={input}
+                            value={edit.notes}
+                            onChange={(e) =>
+                              setEdit((s) => ({ ...s, notes: e.target.value }))
+                            }
+                          />
+                        </label>
+                      </div>
+
+                      <div style={editActions}>
+                        <button
+                          style={{
+                            ...btn,
+                            ...btnPrimary,
+                            opacity: editSlots.length ? 1 : 0.55,
+                          }}
+                          onClick={() => saveEdit(a._id)}
+                          type="button"
+                          disabled={!editSlots.length}
+                        >
+                          Save changes
+                        </button>
+                        <button style={btn} onClick={cancelEdit} type="button">
+                          Cancel
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );
@@ -1162,7 +1172,18 @@ const btn = {
   fontWeight: 900,
   cursor: "pointer",
 };
+const listWrap = {
+  marginTop: 16,
+};
 
+const listScroll = {
+  display: "grid",
+  gap: 12,
+  maxHeight: "70vh",
+  overflowY: "auto",
+  paddingRight: 6,
+  scrollbarWidth: "thin",
+};
 const btnPrimary = {
   border: "1px solid rgba(255,255,255,0.42)",
   background: "#fff",

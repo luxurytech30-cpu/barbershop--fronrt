@@ -91,10 +91,10 @@ export default function Header() {
 
   const navLinks = [
     { label: t("nav.about"), href: "/about" },
-    { label: t("nav.services"), href: "/#services" },
+    // { label: t("nav.services"), href: "/#services" },
     { label: t("nav.shop"), href: "/store" },
     { label: t("nav.academy"), href: "/academy" },
-    { label: t("nav.news"), href: "/#news" },
+    { label: t("nav.book"), href: "/book" },
     { label: t("nav.contact"), href: "/contact" },
   ];
 

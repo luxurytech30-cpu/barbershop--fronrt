@@ -307,206 +307,211 @@ export default function AdminProducts() {
       </div>
 
       {/* List */}
-      <div style={{ marginTop: 16, display: "grid", gap: 12 }}>
-        {loading ? (
-          <div style={empty}>Loading…</div>
-        ) : items.length === 0 ? (
-          <div style={empty}>No products yet.</div>
-        ) : (
-          items.map((p) => {
-            const isEditing = editingId === p._id;
-            return (
-              <div key={p._id} style={productCard}>
-                <div style={productTop}>
-                  <div style={imgWrap}>
-                    <img
-                      src={p.image?.url || ""}
-                      alt={p.name}
-                      style={img}
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={productNameRow}>
-                      <div style={productName}>{p.name}</div>
-                      <div
-                        style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
-                      >
-                        {p.isTop ? (
-                          <span style={{ ...badge, ...badgeTop }}>TOP</span>
-                        ) : null}
-                        {p.isActive === false ? (
-                          <span style={{ ...badge, ...badgeOff }}>
-                            INACTIVE
-                          </span>
-                        ) : null}
-                        {p.cate ? (
-                          <span style={badgeSoft}>{p.cate}</span>
-                        ) : null}
-                        {p.brand ? (
-                          <span style={badgeSoft}>{p.brand}</span>
-                        ) : null}
-                      </div>
-                    </div>
-
-                    <div style={meta}>
-                      <span>₪{p.price}</span>
-                      <span style={dot}>•</span>
-                      <span>Stock: {p.stock}</span>
-                      {p.descrip ? (
-                        <>
-                          <span style={dot}>•</span>
-                          <span
-                            style={{
-                              opacity: 0.8,
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            }}
-                          >
-                            {p.descrip}
-                          </span>
-                        </>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div style={actions}>
-                    <button
-                      style={{ ...btn, ...btnDanger }}
-                      onClick={() => onDelete(p._id)}
-                    >
-                      Delete
-                    </button>
-                    {!isEditing ? (
-                      <button
-                        style={{ ...btn, ...btnPrimary }}
-                        onClick={() => startEdit(p)}
-                      >
-                        Edit
-                      </button>
-                    ) : (
-                      <button style={btn} onClick={cancelEdit}>
-                        Close
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* Edit panel */}
-                {isEditing && (
-                  <div style={editPanel}>
-                    <div style={editGrid}>
-                      <EditField
-                        label="Name"
-                        value={edit.name}
-                        onChange={(v) => setEdit((s) => ({ ...s, name: v }))}
-                      />
-                      <EditField
-                        label="Price"
-                        value={String(edit.price)}
-                        onChange={(v) => setEdit((s) => ({ ...s, price: v }))}
-                      />
-                      <EditField
-                        label="Stock"
-                        value={String(edit.stock)}
-                        onChange={(v) => setEdit((s) => ({ ...s, stock: v }))}
-                      />
-                      <EditField
-                        label="Category (cate)"
-                        value={edit.cate}
-                        onChange={(v) => setEdit((s) => ({ ...s, cate: v }))}
-                      />
-                      <EditField
-                        label="Brand"
-                        value={edit.brand}
-                        onChange={(v) => setEdit((s) => ({ ...s, brand: v }))}
-                      />
-
-                      <label style={{ ...field, gridColumn: "1 / -1" }}>
-                        <span style={label}>Description</span>
-                        <textarea
-                          value={edit.descrip}
-                          onChange={(e) =>
-                            setEdit((s) => ({ ...s, descrip: e.target.value }))
-                          }
-                          style={textarea}
-                        />
-                      </label>
-
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 16,
-                          alignItems: "center",
-                          flexWrap: "wrap",
+      <div style={listWrap}>
+        <div style={listScroll}>
+          {loading ? (
+            <div style={empty}>Loading…</div>
+          ) : items.length === 0 ? (
+            <div style={empty}>No products yet.</div>
+          ) : (
+            items.map((p) => {
+              const isEditing = editingId === p._id;
+              return (
+                <div key={p._id} style={productCard}>
+                  <div style={productTop}>
+                    <div style={imgWrap}>
+                      <img
+                        src={p.image?.url || ""}
+                        alt={p.name}
+                        style={img}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
                         }}
+                      />
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={productNameRow}>
+                        <div style={productName}>{p.name}</div>
+                        <div
+                          style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
+                        >
+                          {p.isTop ? (
+                            <span style={{ ...badge, ...badgeTop }}>TOP</span>
+                          ) : null}
+                          {p.isActive === false ? (
+                            <span style={{ ...badge, ...badgeOff }}>
+                              INACTIVE
+                            </span>
+                          ) : null}
+                          {p.cate ? (
+                            <span style={badgeSoft}>{p.cate}</span>
+                          ) : null}
+                          {p.brand ? (
+                            <span style={badgeSoft}>{p.brand}</span>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      <div style={meta}>
+                        <span>₪{p.price}</span>
+                        <span style={dot}>•</span>
+                        <span>Stock: {p.stock}</span>
+                        {p.descrip ? (
+                          <>
+                            <span style={dot}>•</span>
+                            <span
+                              style={{
+                                opacity: 0.8,
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {p.descrip}
+                            </span>
+                          </>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div style={actions}>
+                      <button
+                        style={{ ...btn, ...btnDanger }}
+                        onClick={() => onDelete(p._id)}
                       >
-                        <label style={check}>
-                          <input
-                            type="checkbox"
-                            checked={!!edit.isTop}
+                        Delete
+                      </button>
+                      {!isEditing ? (
+                        <button
+                          style={{ ...btn, ...btnPrimary }}
+                          onClick={() => startEdit(p)}
+                        >
+                          Edit
+                        </button>
+                      ) : (
+                        <button style={btn} onClick={cancelEdit}>
+                          Close
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Edit panel */}
+                  {isEditing && (
+                    <div style={editPanel}>
+                      <div style={editGrid}>
+                        <EditField
+                          label="Name"
+                          value={edit.name}
+                          onChange={(v) => setEdit((s) => ({ ...s, name: v }))}
+                        />
+                        <EditField
+                          label="Price"
+                          value={String(edit.price)}
+                          onChange={(v) => setEdit((s) => ({ ...s, price: v }))}
+                        />
+                        <EditField
+                          label="Stock"
+                          value={String(edit.stock)}
+                          onChange={(v) => setEdit((s) => ({ ...s, stock: v }))}
+                        />
+                        <EditField
+                          label="Category (cate)"
+                          value={edit.cate}
+                          onChange={(v) => setEdit((s) => ({ ...s, cate: v }))}
+                        />
+                        <EditField
+                          label="Brand"
+                          value={edit.brand}
+                          onChange={(v) => setEdit((s) => ({ ...s, brand: v }))}
+                        />
+
+                        <label style={{ ...field, gridColumn: "1 / -1" }}>
+                          <span style={label}>Description</span>
+                          <textarea
+                            value={edit.descrip}
                             onChange={(e) =>
                               setEdit((s) => ({
                                 ...s,
-                                isTop: e.target.checked,
+                                descrip: e.target.value,
                               }))
                             }
+                            style={textarea}
                           />
-                          <span>Top product</span>
                         </label>
 
-                        <label style={check}>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: 16,
+                            alignItems: "center",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <label style={check}>
+                            <input
+                              type="checkbox"
+                              checked={!!edit.isTop}
+                              onChange={(e) =>
+                                setEdit((s) => ({
+                                  ...s,
+                                  isTop: e.target.checked,
+                                }))
+                              }
+                            />
+                            <span>Top product</span>
+                          </label>
+
+                          <label style={check}>
+                            <input
+                              type="checkbox"
+                              checked={!!edit.isActive}
+                              onChange={(e) =>
+                                setEdit((s) => ({
+                                  ...s,
+                                  isActive: e.target.checked,
+                                }))
+                              }
+                            />
+                            <span>Active</span>
+                          </label>
+                        </div>
+
+                        <label style={{ ...field, gridColumn: "1 / -1" }}>
+                          <span style={label}>Replace image (optional)</span>
                           <input
-                            type="checkbox"
-                            checked={!!edit.isActive}
+                            style={inputFile}
+                            type="file"
+                            accept="image/*"
                             onChange={(e) =>
                               setEdit((s) => ({
                                 ...s,
-                                isActive: e.target.checked,
+                                imageFile: e.target.files?.[0] || null,
                               }))
                             }
                           />
-                          <span>Active</span>
                         </label>
                       </div>
 
-                      <label style={{ ...field, gridColumn: "1 / -1" }}>
-                        <span style={label}>Replace image (optional)</span>
-                        <input
-                          style={inputFile}
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) =>
-                            setEdit((s) => ({
-                              ...s,
-                              imageFile: e.target.files?.[0] || null,
-                            }))
-                          }
-                        />
-                      </label>
+                      <div style={editActions}>
+                        <button
+                          style={{ ...btn, ...btnPrimary }}
+                          onClick={() => saveEdit(p._id)}
+                        >
+                          Save changes
+                        </button>
+                        <button style={btn} onClick={cancelEdit}>
+                          Cancel
+                        </button>
+                      </div>
                     </div>
-
-                    <div style={editActions}>
-                      <button
-                        style={{ ...btn, ...btnPrimary }}
-                        onClick={() => saveEdit(p._id)}
-                      >
-                        Save changes
-                      </button>
-                      <button style={btn} onClick={cancelEdit}>
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })
-        )}
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );
@@ -526,7 +531,17 @@ function EditField({ label: labelText, value, onChange }) {
 }
 
 /* ===== styles ===== */
+const listWrap = {
+  marginTop: 16,
+};
 
+const listScroll = {
+  display: "grid",
+  gap: 12,
+  maxHeight: "70vh",
+  overflowY: "auto",
+  paddingRight: 6,
+};
 const page = {
   maxWidth: 1100,
   margin: "26px auto",

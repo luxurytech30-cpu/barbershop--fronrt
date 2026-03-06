@@ -7,6 +7,7 @@ import AdminBarbers from "../components/admin/AdminBarbers";
 import AdminCourses from "../components/admin/AdminCourses";
 import AdminAppointments from "../components/admin/AdminAppointments";
 import AdminBarberSchedule from "../components/admin/AdminBarberSchedule";
+import AdminServices from "../components/admin/ServicesAdmin"; // ✅ NEW
 
 import { listBarbers } from "../lib/barbers";
 
@@ -39,6 +40,13 @@ export default function AdminPage() {
 
         <div style={tabs}>
           <Tab label="Products" value="products" tab={tab} setTab={setTab} />
+          <Tab
+            label="Services"
+            value="services"
+            tab={tab}
+            setTab={setTab}
+          />{" "}
+          {/* ✅ NEW */}
           <Tab label="Barbers" value="barbers" tab={tab} setTab={setTab} />
           <Tab label="Courses" value="courses" tab={tab} setTab={setTab} />
           <Tab
@@ -57,10 +65,10 @@ export default function AdminPage() {
 
         <div style={{ marginTop: 20 }}>
           {tab === "products" && <AdminProducts />}
+          {tab === "services" && <AdminServices />} {/* ✅ NEW */}
           {tab === "barbers" && <AdminBarbers />}
           {tab === "courses" && <AdminCourses />}
           {tab === "appointments" && <AdminAppointments />}
-
           {tab === "barberSchedule" && (
             <div>
               <div style={pickerRow}>
@@ -113,9 +121,8 @@ function Tab({ label, value, tab, setTab }) {
 
 const wrap = {
   maxWidth: 1100,
-  margin: "40px auto",
+  margin: "120px auto 40px",
   padding: 20,
-  marginTop: 20,
 };
 
 const tabs = { display: "flex", gap: 10, marginTop: 10, flexWrap: "wrap" };
@@ -140,4 +147,5 @@ const pickerSelect = {
   borderRadius: 10,
   border: "1px solid #111",
   minWidth: 220,
+  color: "black",
 };

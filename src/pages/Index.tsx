@@ -17,7 +17,7 @@ const Index = () => {
       <CategoryGrid />
       <BestsellersSection />
       <AcademySection />
-      <NewsSection />
+      {/* <NewsSection /> */}
       <TestimonialsSection />
       <TrustBadges />
     </Layout>
